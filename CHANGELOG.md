@@ -1,3 +1,5 @@
+
+
 ## [4.7.9](https://github.com/wangeditor-team/wangEditor/compare/v4.7.8...v4.7.9) (2021-10-17)
 
 

@@ -75,10 +75,15 @@ function _styleArrTrim(style: string | string[]): string[] {
     }
 
     styleArr.forEach(item => {
-        // 对每项样式，按照 : 拆分为 key 和 value
-        let arr = item.split(':').map(i => {
-            return i.trim()
-        })
+        let arr: string | any[] = []
+        if (item.indexOf(' background-image:') === 0) {
+            arr = ['background-image', item.replace('background-image:', '')]
+        } else {
+            // 对每项样式，按照 : 拆分为 key 和 value
+            arr = item.split(':').map(i => {
+                return i.trim()
+            })
+        }
         if (arr.length === 2) {
             resultArr.push(arr[0] + ':' + arr[1])
         }
@@ -433,7 +438,8 @@ export class DomElement<T extends DomElementSelector = DomElementSelector> {
             if (style) {
                 // 有 style，将 style 按照 `;` 拆分为数组
                 let resultArr: string[] = _styleArrTrim(style)
-
+                console.log('style', style)
+                console.log('resultArr', resultArr)
                 // 替换现有的 style
                 resultArr = resultArr.map(item => {
                     if (item.indexOf(key) === 0) {
@@ -452,6 +458,7 @@ export class DomElement<T extends DomElementSelector = DomElementSelector> {
                     resultArr = _styleArrTrim(resultArr)
                 }
 
+                console.log('resultArr1' + resultArr)
                 // 重新设置 style
                 elem.setAttribute('style', resultArr.join('; '))
             } else {

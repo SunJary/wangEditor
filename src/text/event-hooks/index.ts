@@ -9,6 +9,7 @@ import deleteToKeepP, { cutToKeepP } from './del-to-keep-p'
 import tabToSpan from './tab-to-space'
 import pasteTextHtml from './paste-text-html'
 import imgClickActive from './img-click-active'
+import fakeImgClickActive from './fake-img-click-active'
 
 /**
  * 初始化 text 事件钩子函数
@@ -35,6 +36,9 @@ function initTextHooks(text: Text): void {
 
     // img click active
     imgClickActive(editor, eventHooks.imgClickEvents)
+
+    // img click active
+    fakeImgClickActive(editor, eventHooks.fakeImgClickEvents)
 }
 
 export default initTextHooks

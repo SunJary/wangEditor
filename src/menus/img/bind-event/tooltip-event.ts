@@ -111,6 +111,69 @@ export function createShowHideFn(editor: Editor) {
         hideImgTooltip,
     }
 }
+/**
+ * 生成 Tooltip 的显示隐藏函数
+ */
+export function createFakeShowHideFn(editor: Editor) {
+    let tooltip: Tooltip | null
+    const t = (text: string, prefix: string = ''): string => {
+        return editor.i18next.t(prefix + text)
+    }
+
+    /**
+     * 显示 tooltip
+     * @param $node 链接元素
+     */
+    function showFakeImgTooltip($node: DomElement) {
+        const conf: TooltipConfType = [
+            {
+                $elem: $("<span class='w-e-icon-trash-o'></span>"),
+                onClick: (editor: Editor, $node: DomElement) => {
+                    // 选中img元素
+                    editor.selection.createRangeByElem($node)
+                    editor.selection.restoreSelection()
+                    editor.cmd.do('delete')
+                    // 返回 true，表示执行完之后，隐藏 tooltip。否则不隐藏。
+                    return true
+                },
+            },
+        ]
+
+        if ($node.attr('data-href')) {
+            conf.push({
+                $elem: $(`<span>${t('查看链接')}</span>`),
+                onClick: (editor: Editor, $node: DomElement) => {
+                    let link = $node.attr('data-href')
+                    if (link) {
+                        link = decodeURIComponent(link)
+                        window.open(link, '_target')
+                    }
+                    // 返回 true，表示执行完之后，隐藏 tooltip。否则不隐藏。
+                    return true
+                },
+            })
+        }
+
+        tooltip = new Tooltip(editor, $node, conf)
+        tooltip.create()
+    }
+
+    /**
+     * 隐藏 tooltip
+     */
+    function hideFakeImgTooltip() {
+        // 移除 tooltip
+        if (tooltip) {
+            tooltip.remove()
+            tooltip = null
+        }
+    }
+
+    return {
+        showFakeImgTooltip,
+        hideFakeImgTooltip,
+    }
+}
 
 /**
  * 绑定 tooltip 事件
@@ -132,4 +195,22 @@ export default function bindTooltipEvent(editor: Editor) {
 
     // change 时隐藏
     editor.txt.eventHooks.changeEvents.push(hideImgTooltip)
+}
+export function bindFakeTooltipEvent(editor: Editor) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { showFakeImgTooltip, hideFakeImgTooltip } = createFakeShowHideFn(editor)
+
+    // 点击图片元素是，显示 tooltip
+    editor.txt.eventHooks.fakeImgClickEvents.push(showFakeImgTooltip)
+
+    // 点击其他地方，或者滚动时，隐藏 tooltip
+    editor.txt.eventHooks.clickEvents.push(hideFakeImgTooltip)
+    editor.txt.eventHooks.keyupEvents.push(hideFakeImgTooltip)
+    editor.txt.eventHooks.toolbarClickEvents.push(hideFakeImgTooltip)
+    editor.txt.eventHooks.menuClickEvents.push(hideFakeImgTooltip)
+    editor.txt.eventHooks.textScrollEvents.push(hideFakeImgTooltip)
+    editor.txt.eventHooks.imgDragBarMouseDownEvents.push(hideFakeImgTooltip)
+
+    // change 时隐藏
+    editor.txt.eventHooks.changeEvents.push(hideFakeImgTooltip)
 }

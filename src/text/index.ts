@@ -47,6 +47,8 @@ type TextEventHooks = {
     toolbarClickEvents: EventHandler[]
     /** 图片被点击事件 */
     imgClickEvents: ((e: DomElement) => void)[]
+    /** 图片被点击事件 */
+    fakeImgClickEvents: ((e: DomElement) => void)[]
     /** 图片拖拽MouseDown */
     imgDragBarMouseDownEvents: (() => void)[]
     /** 表格点击 */
@@ -87,6 +89,7 @@ class Text {
             textScrollEvents: [],
             toolbarClickEvents: [],
             imgClickEvents: [],
+            fakeImgClickEvents: [],
             imgDragBarMouseDownEvents: [],
             tableClickEvents: [],
             menuClickEvents: [],
@@ -489,6 +492,26 @@ class Text {
 
             const imgClickEvents = eventHooks.imgClickEvents
             imgClickEvents.forEach(fn => fn($img as DomElement))
+        })
+
+        // w-fake-img click
+        $textElem.on('click', (e: Event) => {
+            // 存储图片元素
+            let $img: DomElement | null = null
+
+            const target = e.target as HTMLElement
+            const $target = $(target)
+
+            //处理图片点击 去除掉emoji图片的情况
+            if ($target.getNodeName() === 'DIV' && $target.hasClass('w-fake-img')) {
+                // 当前点击的就是img
+                e.stopPropagation()
+                $img = $target
+            }
+            if (!$img) return // 没有点击图片，则返回
+
+            const fakeImgClickEvents = eventHooks.fakeImgClickEvents
+            fakeImgClickEvents.forEach(fn => fn($img as DomElement))
         })
 
         // code click

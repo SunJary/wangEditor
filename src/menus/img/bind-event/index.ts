@@ -8,6 +8,7 @@ import bindPasteImg from './paste-img'
 import bindDropImg from './drop-img'
 import bindDragImgSize from './drag-size'
 import bindTooltipImg from './tooltip-event'
+import { bindFakeTooltipEvent } from './tooltip-event'
 import bindKeyboardEvent from './keyboard-event'
 
 /**
@@ -27,6 +28,8 @@ function bindEvent(editor: Editor): void {
 
     //Tooltip
     bindTooltipImg(editor)
+
+    bindFakeTooltipEvent(editor)
 
     bindKeyboardEvent(editor)
 }
