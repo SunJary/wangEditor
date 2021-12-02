@@ -438,8 +438,6 @@ export class DomElement<T extends DomElementSelector = DomElementSelector> {
             if (style) {
                 // 有 style，将 style 按照 `;` 拆分为数组
                 let resultArr: string[] = _styleArrTrim(style)
-                console.log('style', style)
-                console.log('resultArr', resultArr)
                 // 替换现有的 style
                 resultArr = resultArr.map(item => {
                     if (item.indexOf(key) === 0) {
@@ -458,7 +456,6 @@ export class DomElement<T extends DomElementSelector = DomElementSelector> {
                     resultArr = _styleArrTrim(resultArr)
                 }
 
-                console.log('resultArr1' + resultArr)
                 // 重新设置 style
                 elem.setAttribute('style', resultArr.join('; '))
             } else {

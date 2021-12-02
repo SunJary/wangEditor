@@ -42,7 +42,6 @@ class SelectVideoMenu extends BtnMenu {
             content = content.replace(RegExp("{id}", "g"), id);
             content = content.replace(RegExp("{source}", "g"), data[0].video_url);
             content = content.replace(RegExp("{cover_url}", "g"), data[0].cover_url);
-            console.log(content)
             self.editor.cmd.do("insertHTML", content);
 
         }, function () {
@@ -56,3 +55,10 @@ class SelectVideoMenu extends BtnMenu {
 
 // 注册菜单
 E.registerMenu("SelectVideo", SelectVideoMenu)
+
+const editorSetConfig = (editor) => {
+    editor.config.uploadImgServer = '/admin.php/addons/article/upload/images'
+    editor.config.uploadVideoServer = '/admin.php/addons/article/upload/video'
+    editor.config.excludeMenus = excludeMenus;
+    editor.config.showLinkImg = false;
+}
