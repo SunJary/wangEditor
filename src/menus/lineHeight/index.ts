@@ -48,7 +48,7 @@ class LineHeight extends DropListMenu implements MenuActive {
 
         if (!$containerElem.elems.length) return
 
-        //选中多行操作
+        //选中多行操作 全选？
         if ($containerElem && editor.$textElem.equal($containerElem)) {
             // 标识是否可以设置行高的样式
             let setStyleLock: boolean = false
@@ -95,6 +95,15 @@ class LineHeight extends DropListMenu implements MenuActive {
             return
         }
 
+        //选中多行操作
+        if ($containerElem.childNodes() !== null) {
+            const containerElemChildren = $containerElem.elems[0].children
+
+            this.changeLineHeight(containerElemChildren, value)
+
+            return
+        }
+
         // 单行操作
         // 选中区间的dom元素
         const selectElem = $containerElem.elems[0]
@@ -103,7 +112,10 @@ class LineHeight extends DropListMenu implements MenuActive {
         const selectElemWrapdom = this.getDom(selectElem)
 
         // 目前只支持p 段落标签设置行高
-        if ($(selectElemWrapdom).getNodeName() !== 'P') {
+        if (
+            $(selectElemWrapdom).getNodeName() !== 'P' &&
+            $(selectElemWrapdom).getNodeName() !== 'SECTION'
+        ) {
             return
         }
 
@@ -115,6 +127,27 @@ class LineHeight extends DropListMenu implements MenuActive {
         return
     }
 
+    /**
+     * 遍历设置子元素行高
+     * @param dom
+     * @param height
+     */
+    public changeLineHeight(dom: HTMLCollection, height: string) {
+        for (let i = 0; i < dom.length; i++) {
+            const item: HTMLElement = dom[i] as HTMLElement
+
+            // 目前支持p 及 SECTION 标签设置行高
+            if ($(item).getNodeName() !== 'P' && $(item).getNodeName() !== 'SECTION') {
+                continue
+            }
+
+            $(item).css('line-height', height)
+
+            if ($(item).childNodes() !== null) {
+                this.changeLineHeight($(item).elems[0].children, height)
+            }
+        }
+    }
     /**
      * 遍历dom 获取祖父元素 直到contenteditable属性的div标签
      *
