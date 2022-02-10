@@ -68,7 +68,7 @@ class LineHeight extends DropListMenu implements MenuActive {
                 const item: HTMLElement = containerElemChildren[i] as HTMLElement
 
                 // 目前只支持p 段落标签设置行高
-                if ($(item).getNodeName() !== 'P') {
+                if ($(item).getNodeName() !== 'P' && $(item).getNodeName() !== 'SECTION') {
                     continue
                 }
 
@@ -100,8 +100,6 @@ class LineHeight extends DropListMenu implements MenuActive {
             const containerElemChildren = $containerElem.elems[0].children
 
             this.changeLineHeight(containerElemChildren, value)
-
-            return
         }
 
         // 单行操作
