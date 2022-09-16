@@ -501,7 +501,11 @@ class Text {
             const $target = $(target)
 
             //处理图片点击 去除掉emoji图片的情况
-            if ($target.getNodeName() === 'DIV' && $target.hasClass('w-fake-img')) {
+            if (
+                $target.getNodeName() === 'DIV' &&
+                $target.hasClass('w-fake-img') &&
+                $target.hasClass('wangmoviebox')
+            ) {
                 // 当前点击的就是img
                 e.stopPropagation()
                 $img = $target
